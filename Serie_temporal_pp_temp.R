@@ -2,10 +2,8 @@ setwd('C:/Users/Sobis/OneDrive - UNIVERSIDAD DE GRANADA/Tesis y TFG/Datos')
 datos<-read.csv('ifapa.csv', header=T, sep=";", dec=".")
 datos$Date<-as.Date(datos$Date, format="%d/%m/%Y")
 
-#Representamos a través de un gráfico de barras la precipitación acumulada mensual para cada ubicación
-#junto con un gráfico de líneas para la temperatura ambiental de cada lugar
 
-# Instalar y cargar si no estan instalados
+# Instalar y cargar ggplot2 si no lo tienes instalado
 #install.packages("ggplot2")
 #install.packages("dplyr")
 #install.packages("tidyr")
@@ -17,7 +15,7 @@ library(lubridate)
 
 
 # Factor de escala para alinear los ejes
-factor_escala <- 1.8 * max(datos$Pp_ifapa, na.rm = TRUE) / max(datos$T_med_ifapa, na.rm = TRUE)
+factor_escala <- 4 * max(datos$Pp_ifapa, na.rm = TRUE) / max(datos$T_med_ifapa, na.rm = TRUE)
 
 # Crear una columna de mes y año para agrupar
 datos <- datos %>%
@@ -54,12 +52,12 @@ ggplot(datos_mensuales, aes(x = Month)) +
   # Eje Y izquierdo para la precipitación acumulada mensual
   scale_y_continuous(
     name = "Precipitación (mm)", 
-    limits = c(0, 100),  # Ajustar límite superior al máximo de la precipitación acumulada (con margen)
-    breaks = pretty(c(0, 100), n = 6),  # Escala de precipitación ajustada
+    limits = c(0, 220),  # Ajustar límite superior al máximo de la precipitación acumulada (con margen)
+    breaks = seq(0,220, by=20),  # Escala de precipitación ajustada
     expand = c(0, 0),
     sec.axis = sec_axis(~ ./factor_escala, 
                         name = expression("Temperatura (ºC)"), 
-                        breaks = pretty(c(0, 30), n = 6)  # Escala para la temperatura
+                        breaks = seq(0,30, by=5)  # Escala para la temperatura
     )
   ) +
   
@@ -73,7 +71,7 @@ ggplot(datos_mensuales, aes(x = Month)) +
   scale_color_manual(values = c("Ladera Norte" = "#9e2a2b", "Ladera Sur" = "#e09f3e")) +  # Rojo oscuro y verde
   
   # Ajustar la escala temporal de marzo 2022 a noviembre 2023
-  scale_x_date(limits = c(as.Date("2022-03-01"), as.Date("2023-10-31")),
+  scale_x_date(limits = c(as.Date("2022-01-03"), as.Date("2023-10-31")),
                date_breaks = "1 month", date_labels = "%b %Y") +
   
   # Etiquetas y leyenda

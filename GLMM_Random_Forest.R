@@ -1,7 +1,12 @@
-setwd('C:/Users/Sobis/OneDrive - UNIVERSIDAD DE GRANADA/Tesis y TFG/Datos')
+#Aplicación de GLMM y posterior Random Forest
+
+setwd('C:/Users/Usuario/OneDrive - UNIVERSIDAD DE GRANADA/Tesis y TFG/Datos')
 datos<-read.table('Datos_filtrados_melt_R2_satelites_combinados.csv', header=T, sep=";", dec=".")
 
-#Tras las conclusiones de los script anteriores, procedemos a realizar un GLMM
+library(lubridate)
+library(MASS)
+library(vcd)
+library(randomForest)
 
 datos$Date<-as.Date(datos$Date, format="%d/%m/%Y")
 datos$Treatment<-as.factor(datos$Treatment)
@@ -14,10 +19,13 @@ table(indice)
 df_co2<-datos[indice,]
 df_ch4<-datos[!indice,]
 
-library(lubridate)
-library(MASS)
-library(vcd)
-library(randomForest)
+#Treatment ANUAL CO2
+
+model<-glmmPQL(abs(Exp_Flux) ~  Treatment*Location, random= ~ 1|Number_Collar,data=df_co2,family=poisson)
+summary(model)
+boxplot(df_co2$Treatment,df_co2$Exp_Flux)
+
+#Hay diferencia significativa entre localizaciones (p-valor<0.05)
 
 #Treatment ANUAL CO2 en Nacimiento
 
@@ -58,6 +66,11 @@ summary (model)
 #Al ser p-valor >0'05, diferencia NO significativa
 
 #----------------------------------------------------------------------#
+#Treatment ANUAL CH4
+
+model<-glmmPQL(abs(Exp_Flux) ~  Treatment*Location, random= ~ 1|Number_Collar,data=df_ch4,family=poisson)
+summary(model)
+boxplot(df_ch4$Treatment,abs(df_ch4$Exp_Flux))
 
 #Treatment ANUAL CH4 en Nacimiento
 

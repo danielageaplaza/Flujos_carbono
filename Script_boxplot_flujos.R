@@ -1,7 +1,7 @@
 #Vamos a realizar un analisis visual con los datos de flujo de CO2 y CH4 a través de boxplot, 
 #con la base de datos total para ambos lugares.
 
-setwd('C:/Users/Sobis/OneDrive - UNIVERSIDAD DE GRANADA/Tesis y TFG/Datos')
+setwd('C:/Users/Usuario/OneDrive - UNIVERSIDAD DE GRANADA/Tesis y TFG/Datos')
 datos<-read.csv('Datos_filtrados_melt_R2_temp.csv', header=T, sep=";", dec=".")
 datos$Date<-as.Date(datos$Date, format="%d/%m/%Y")
 datos_pre_dcast <- datos[, c("Exp_Flux", "tipo_gas", "Treatment", "Estacion","Location","Date")]
@@ -26,7 +26,7 @@ colores_CH4<-c("VP"="darkorange3","BS"="orange")
 
 #------------------------------------------------------------------------------#
 
-#CALCULAMOS LOS VALORES ANUALES CO2
+#CALCULAMOS LOS VALORES TOTALES CO2
 
 library(ggplot2)
 
@@ -63,7 +63,7 @@ ggplot(df_co2, aes(x = Location, y = Exp_Flux, fill = Treatment)) +
 
 #------------------------------------------------------------------------------#
 
-#CALCULAMOS LOS VALORES ANUALES CH4
+#CALCULAMOS LOS VALORES TOTALES CH4
 
 ggplot(df_ch4, aes(x = Location, y = Exp_Flux, fill = Treatment)) +
   geom_boxplot() +
